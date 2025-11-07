@@ -4,33 +4,106 @@ extends CharacterBody2D
 @onready var AttackArea = $Area2D
 
 const SPEED = 450.0
-const JUMP_VELOCITY = -800.0
+const FIRST_JUMP_VELOCITY = -700.0
+const SECOND_JUMP_VELOCITY = -600.0
 var GRAVITY = Vector2.ZERO
-
+var REDUCED_GRAVITY = Vector2.ZERO
+var attacking = false
+var ATTACK_DURATION = 0.1
+@export_range(0, 2)var jumpCount: int = 0
+@export_range(0.0, 0.2)var attackDurationTimer: float = 0.0
+var ATTACK_COOLDOWN = 0.3
+var attackCDFlag = false
+var CHARACTER1 = 1
+var CHARACTER2 = -1
+@export_range(0.0, 1.0) var attackCDTimer: float = 0.0
+var DASH_DURATION = 0.15
+@export_range(0.1, 0.2)var dashDurationTimer: float = 0.0
+var DASH_COOLDOWN = 0.25
+@export_range(0.0,0.15)var dashCDTimer: float = 0.0
+var dashCDFlag = false
+var DASH_SPEED = 1400.0
+@export_range(-1, 1)var dash_dir:int = 1
+var can_dash = true
+var dashing = false
 var facing := 1 # 1 = direita, -1 = esquerda
+@export_range(-1, 1)var character: int = 1
+
+
 
 func _ready() -> void:
 	GRAVITY.x = 0.0
-	GRAVITY.y = 1500.0
+	GRAVITY.y = 2000.0
+	REDUCED_GRAVITY.x = 0.0
+	REDUCED_GRAVITY.y = 1000.0
+	AttackArea.body_entered.connect(attack_area_detection)
+	AttackArea.visible = false
+	character = 1
+
+
+
+func _process(delta: float) -> void:
+	
+	if Input.is_action_just_pressed("swap"):
+		swap_character()
+	
+	if Input.is_action_just_pressed("attack") and !attacking and !attackCDFlag:
+		attack()
+	
+	if attacking:
+		run_attack_timer(delta)
+	
+	if attackCDFlag:
+		run_attack_cd_timer(delta)
+
 
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
-		velocity += GRAVITY * delta
-
-	if Input.is_action_just_pressed("up") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+		if jumpCount == 0:
+			jumpCount = 1
+		if Input.is_action_pressed("up") and velocity.y<0:
+			velocity += REDUCED_GRAVITY * delta
+		else:
+			velocity += GRAVITY * delta
+	
+	if is_on_floor():
+		jumpCount = 0
+		can_dash = true
+	
+	if Input.is_action_just_pressed("up") and jumpCount<2:
+		match jumpCount:
+			0:
+				velocity.y = FIRST_JUMP_VELOCITY
+			1:
+				if character == CHARACTER1:
+					velocity.y = SECOND_JUMP_VELOCITY
+		jumpCount+=1
 	
 	var direction := Input.get_axis("left", "right")
 	if direction:
-		velocity.x = direction * SPEED
+		dash_dir = direction
+		if not dashing:
+			velocity.x = direction * SPEED
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-
+		if not dashing:
+			velocity.x = move_toward(velocity.x, 0, SPEED)
+	
+	if Input.is_action_just_pressed("dash") and not dashing and can_dash and character == CHARACTER2 and !dashCDFlag:
+		enable_dash()
+	
+	if dashing:
+		run_dash_timer(delta)
+	
+	if dashCDFlag:
+		run_dash_cd_timer(delta)
+	
 	move_and_slide()
 	
 	if direction != 0:
 		set_facing(direction)
+
+
 
 func set_facing(dir: int)->void:
 	if dir == facing:
@@ -38,3 +111,78 @@ func set_facing(dir: int)->void:
 	facing = dir
 	Sprite.flip_h = (facing<0)
 	AttackArea.scale.x = facing
+
+
+
+func attack_area_detection(area:Area2D) -> void:
+	if area.is_in_group("Enemy"):
+		print("hit")
+
+
+
+func attack()->void:
+	AttackArea.monitoring = true
+	AttackArea.visible = true
+	attacking = true
+	attackDurationTimer = ATTACK_DURATION
+	print("iniciou ataque")
+
+
+
+func run_attack_timer(delta:float)->void:
+	attackDurationTimer -= delta
+	print(attackDurationTimer)
+	if attackDurationTimer <= 0.0:
+		attacking = false
+		AttackArea.monitoring = false
+		AttackArea.visible = false
+		attackDurationTimer = 0.0
+		attackCDTimer = ATTACK_COOLDOWN
+		attackCDFlag = true
+		print("finalizou ataque")
+
+
+
+func run_attack_cd_timer(delta:float)->void:
+	attackCDTimer -= delta
+	print(attackCDTimer)
+	if attackCDTimer <=0.0:
+		attackCDFlag = false
+		attackCDTimer = 0.0
+		print("Fim do cooldown")
+
+
+
+func swap_character()->void:
+	if character == CHARACTER1:
+		character = CHARACTER2
+	else:
+		character = CHARACTER1
+
+
+
+func enable_dash()->void:
+	dashing = true
+	dashDurationTimer = DASH_DURATION
+	dashCDTimer = DASH_COOLDOWN
+	dashCDFlag = true
+	if !is_on_floor():
+		can_dash = false
+
+
+
+func run_dash_timer(delta:float)->void:
+	velocity.y = 0
+	velocity.x = dash_dir*DASH_SPEED
+	dashDurationTimer -=delta
+	if(dashDurationTimer<=0):
+		dashDurationTimer = 0.0
+		dashing = false
+
+
+
+func run_dash_cd_timer(delta:float)->void:
+	dashCDTimer-=delta
+	if dashCDTimer<=0.0:
+		dashCDTimer = 0.0
+		dashCDFlag = false

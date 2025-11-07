@@ -80,3 +80,5 @@ tile_set = SubResource("TileSet_p1v5b")
 [node name="CharacterBody2D" parent="." instance=ExtResource("3_bcbcq")]
 z_index = 1
 position = Vector2(576, 512)
+attackDurationTimer = null
+attackCDTimer = null

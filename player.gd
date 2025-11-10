@@ -2,6 +2,9 @@ extends CharacterBody2D
 
 @onready var Sprite = $Sprite2D
 @onready var AttackArea = $Area2D
+@onready var DashTimer = $DashTimer
+@onready var World: Node2D = get_parent()
+@onready var ArrowScene = preload("res://Arrow.tscn")
 
 const SPEED = 450.0
 const FIRST_JUMP_VELOCITY = -700.0
@@ -13,6 +16,7 @@ var ATTACK_DURATION = 0.1
 @export_range(0, 2)var jumpCount: int = 0
 @export_range(0.0, 0.2)var attackDurationTimer: float = 0.0
 var ATTACK_COOLDOWN = 0.3
+var SHOT_COOLDOWN = 0.5
 var attackCDFlag = false
 var CHARACTER1 = 1
 var CHARACTER2 = -1
@@ -24,9 +28,12 @@ var DASH_COOLDOWN = 0.25
 var dashCDFlag = false
 var DASH_SPEED = 1400.0
 @export_range(-1, 1)var dash_dir:int = 1
+var dashtimerflag = false
 var can_dash = true
 var dashing = false
-var facing := 1 # 1 = direita, -1 = esquerda
+var facing := 1 # 1 = direita, -1 = esquerdad
+var prev_direction
+
 @export_range(-1, 1)var character: int = 1
 
 
@@ -41,15 +48,20 @@ func _ready() -> void:
 	character = 1
 
 
-
 func _process(delta: float) -> void:
 	
 	if Input.is_action_just_pressed("swap"):
 		swap_character()
 	
 	if Input.is_action_just_pressed("attack") and !attacking and !attackCDFlag:
-		attack()
-	
+		match character:
+			CHARACTER1:
+				shoot()
+			CHARACTER2:
+				attack()
+		
+		
+		
 	if attacking:
 		run_attack_timer(delta)
 	
@@ -81,6 +93,7 @@ func _physics_process(delta: float) -> void:
 		jumpCount+=1
 	
 	var direction := Input.get_axis("left", "right")
+	
 	if direction:
 		dash_dir = direction
 		if not dashing:
@@ -89,8 +102,23 @@ func _physics_process(delta: float) -> void:
 		if not dashing:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 	
-	if Input.is_action_just_pressed("dash") and not dashing and can_dash and character == CHARACTER2 and !dashCDFlag:
-		enable_dash()
+	if dashtimerflag == true and DashTimer.time_left == 0.0:
+		dashtimerflag = false
+	elif dashtimerflag == true:
+		if (Input.is_action_just_pressed("right") or Input.is_action_just_pressed("left")) and not dashing and can_dash and character == CHARACTER2 and !dashCDFlag:
+			if direction == prev_direction:
+				enable_dash()
+	
+	
+	if direction:
+		prev_direction = direction
+		if DashTimer.time_left == 0.0: 
+			DashTimer.start(0.2)
+			dashtimerflag = true
+	
+	
+	#if Input.is_action_just_pressed("dash") and not dashing and can_dash and character == CHARACTER2 and !dashCDFlag:
+		#enable_dash()
 	
 	if dashing:
 		run_dash_timer(delta)
@@ -127,11 +155,17 @@ func attack()->void:
 	attackDurationTimer = ATTACK_DURATION
 	print("iniciou ataque")
 
-
+func shoot()->void:
+	var Arrow = ArrowScene.instantiate()
+	get_parent().add_child(Arrow, false, Node.INTERNAL_MODE_DISABLED)
+	Arrow.global_position.y = global_position.y
+	Arrow.global_position.x = global_position.x + (96*facing)
+	attackCDTimer = SHOT_COOLDOWN
+	attackCDFlag = true
+	Arrow.setDir(facing)
 
 func run_attack_timer(delta:float)->void:
 	attackDurationTimer -= delta
-	print(attackDurationTimer)
 	if attackDurationTimer <= 0.0:
 		attacking = false
 		AttackArea.monitoring = false
@@ -145,7 +179,6 @@ func run_attack_timer(delta:float)->void:
 
 func run_attack_cd_timer(delta:float)->void:
 	attackCDTimer -= delta
-	print(attackCDTimer)
 	if attackCDTimer <=0.0:
 		attackCDFlag = false
 		attackCDTimer = 0.0

@@ -11,6 +11,7 @@ size = Vector2(58, 122)
 size = Vector2(128, 128)
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
+z_index = 1
 script = ExtResource("1_kpjcp")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -34,3 +35,6 @@ texture = ExtResource("3_kne1u")
 position = Vector2(1, -150)
 zoom = Vector2(0.75, 0.75)
 position_smoothing_enabled = true
+
+[node name="DashTimer" type="Timer" parent="."]
+one_shot = true

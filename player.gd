@@ -56,7 +56,10 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("attack") and !attacking and !attackCDFlag:
 		match character:
 			CHARACTER1:
-				shoot()
+				if not is_on_floor() and Input.is_action_pressed("down"):
+					shootDown()
+				else: 
+					shoot()
 			CHARACTER2:
 				attack()
 		
@@ -163,6 +166,18 @@ func shoot()->void:
 	attackCDTimer = SHOT_COOLDOWN
 	attackCDFlag = true
 	Arrow.setDir(facing)
+
+
+func shootDown()->void:
+	var Arrow = ArrowScene.instantiate()
+	get_parent().add_child(Arrow, false, Node.INTERNAL_MODE_DISABLED)
+	Arrow.global_position.y = global_position.y + 128
+	Arrow.global_position.x = global_position.x
+	attackCDTimer = SHOT_COOLDOWN
+	attackCDFlag = true
+	Arrow.setDir(0)
+
+
 
 func run_attack_timer(delta:float)->void:
 	attackDurationTimer -= delta

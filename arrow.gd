@@ -14,11 +14,13 @@ func setDir(direction: int) -> void:
 	dir = direction
 	if dir == -1:
 		Sprite.flip_h = true
-		
+	if dir == 0:
+		velocity.y += SPEED
+		rotate(PI/2)
 	
 func _ready() -> void:
 	print("arrow created")
-	GRAVITY.y = 700.0
+	GRAVITY.y = 500.0
 
 
 func _physics_process(delta: float) -> void:

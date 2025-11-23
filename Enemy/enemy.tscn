@@ -1,0 +1,61 @@
+[gd_scene load_steps=9 format=3 uid="uid://c4te4mr2noc80"]
+
+[ext_resource type="Texture2D" uid="uid://cvj13x73weyoy" path="res://Enemy/hitbox_enemy.png" id="1_2pb1h"]
+[ext_resource type="Script" uid="uid://mxhy54k0637p" path="res://Enemy/gravity.gd" id="2_px1sc"]
+[ext_resource type="Script" uid="uid://cvux7jk46v73n" path="res://state_machine/node_finite_state_machine.gd" id="3_am0pq"]
+[ext_resource type="Script" uid="uid://dispbe3grmb4s" path="res://Enemy/state_machine_controller.gd" id="3_m6jha"]
+[ext_resource type="Script" uid="uid://b5df4bdvnfunk" path="res://Enemy/state_hunt.gd" id="4_ncf7h"]
+[ext_resource type="Script" uid="uid://dm8pjufsnyqkh" path="res://Enemy/state_attack.gd" id="5_m6jha"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_px1sc"]
+size = Vector2(58, 122)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_glvfu"]
+b = Vector2(800, 0)
+
+[node name="Enemy" type="CharacterBody2D" groups=["Enemy"]]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_2pb1h")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_px1sc")
+
+[node name="Gravity" type="Node" parent="." node_paths=PackedStringArray("character_body_2d", "sprite_2d")]
+script = ExtResource("2_px1sc")
+character_body_2d = NodePath("..")
+sprite_2d = NodePath("../Sprite2D")
+
+[node name="StateMachineController" type="Node" parent="." node_paths=PackedStringArray("node_finite_state_machine")]
+script = ExtResource("3_m6jha")
+node_finite_state_machine = NodePath("../StateMachine")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_node_state")]
+script = ExtResource("3_am0pq")
+initial_node_state = NodePath("Hunt")
+
+[node name="Hunt" type="Node" parent="StateMachine" node_paths=PackedStringArray("character_body_2d", "sprite_2d", "ray_front")]
+script = ExtResource("4_ncf7h")
+character_body_2d = NodePath("../..")
+sprite_2d = NodePath("../../Sprite2D")
+speed = 400.0
+jump_force = -600.0
+ray_front = NodePath("../../RayCast2D")
+
+[node name="Attack" type="Node" parent="StateMachine" node_paths=PackedStringArray("character_body_2d", "sprite_2d")]
+script = ExtResource("5_m6jha")
+character_body_2d = NodePath("../..")
+sprite_2d = NodePath("../../Sprite2D")
+
+[node name="AttackArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
+position = Vector2(-400, 0)
+shape = SubResource("SegmentShape2D_glvfu")
+debug_color = Color(0.99722415, 0, 0.18023321, 0.41960785)
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(80, 0)
+
+[connection signal="body_entered" from="AttackArea" to="StateMachineController" method="_on_attack_area_body_entered"]
+[connection signal="body_exited" from="AttackArea" to="StateMachineController" method="_on_attack_area_body_exited"]

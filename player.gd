@@ -204,8 +204,10 @@ func run_attack_cd_timer(delta:float)->void:
 func swap_character()->void:
 	if character == CHARACTER1:
 		character = CHARACTER2
+		Sprite.texture = load("res://hitbox_player.png")
 	else:
 		character = CHARACTER1
+		Sprite.texture = load("res://hitbox_player2.png")
 
 
 

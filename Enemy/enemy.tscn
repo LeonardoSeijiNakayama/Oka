@@ -46,6 +46,7 @@ ray_front = NodePath("../../RayCast2D")
 script = ExtResource("5_m6jha")
 character_body_2d = NodePath("../..")
 sprite_2d = NodePath("../../Sprite2D")
+slow_down_speed = 700.0
 
 [node name="AttackArea" type="Area2D" parent="."]
 

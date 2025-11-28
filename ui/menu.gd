@@ -16,6 +16,6 @@ func _process(_delta: float) -> void:
 	pass
 
 func on_BtnPlay_Pressed()->void:
-	get_tree().change_scene_to_file("res://World.tscn")
+	get_tree().change_scene_to_file("res://ui/Story.tscn")
 func on_BtnExit_Pressed()->void:
 	get_tree().quit()

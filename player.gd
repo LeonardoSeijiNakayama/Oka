@@ -13,7 +13,7 @@ extends CharacterBody2D
 @onready var AudioHit: AudioStreamPlayer2D = $Audios/Hit
 @onready var AudioSwap: AudioStreamPlayer2D = $Audios/Swap
 
-@export var lifes : int = 5
+@export var lifes : int = 3
 
 var muzzle_position = 0
 const SPEED = 1300.0
@@ -345,5 +345,5 @@ func _on_hurt_box_area_entered(_area: Area2D) -> void:
 	print('lifes = ', lifes)
 	_area.get_parent().queue_free()
 	if(lifes <= 0):
-		print('morreu')
+		get_tree().change_scene_to_file("res://Death.tscn")
 		queue_free()

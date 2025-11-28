@@ -322,8 +322,8 @@ func run_dash_cd_timer(delta:float)->void:
 
 func _on_hurt_box_area_entered(_area: Area2D) -> void:
 	lifes -= 1
-	print('vida = ', lifes)
 	print('lifes = ', lifes)
+	_area.get_parent().queue_free()
 	if(lifes <= 0):
 		#var enemy_death = enemy_death_effect.instantiate() as Node2D
 		#enemy_death.global_position = global_positiond

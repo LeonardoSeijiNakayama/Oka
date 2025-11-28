@@ -35,6 +35,8 @@ frame_progress = 0.99414504
 script = ExtResource("2_3ldfn")
 
 [node name="Timer" type="Timer" parent="."]
+wait_time = 1.15
+autostart = true
 
 [node name="HitBox" type="Area2D" parent="."]
 collision_layer = 16

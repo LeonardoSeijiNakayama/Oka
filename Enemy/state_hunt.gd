@@ -12,15 +12,19 @@ var player: CharacterBody2D
 func on_physics_process(_delta: float) -> void:
 	var diff := player.global_position - character_body_2d.global_position
 	var direction = sign(diff.x)
+	
 	sprite_2d.flip_h = !(direction > 0)
 	ray_front.scale.x = direction
+	
 	if direction < 0:
 		if marker.position.x > 0:
-			marker.position.x *= -1;
+			marker.position.x = -marker.position.x;
 	elif direction > 0:
 		if marker.position.x < 0:
-			marker.position.x *= -1;
+			marker.position.x = -marker.position.x;
+
 	character_body_2d.velocity.x = direction * speed
+
 
 	var hit := ray_front.get_collider()
 	if hit != null and hit.is_in_group("Obstacle") and character_body_2d.is_on_floor():

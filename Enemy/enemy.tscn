@@ -1,13 +1,13 @@
-[gd_scene load_steps=38 format=3 uid="uid://c4te4mr2noc80"]
+[gd_scene load_steps=38 format=3 uid="uid://qofkkiy8mxc3"]
 
-[ext_resource type="Script" uid="uid://6ekbe8amij3x" path="res://Enemy/enemy.gd" id="1_xp0jm"]
-[ext_resource type="Script" uid="uid://mxhy54k0637p" path="res://Enemy/gravity.gd" id="2_px1sc"]
+[ext_resource type="Script" uid="uid://6ekbe8amij3x" path="res://enemy/enemy.gd" id="1_xp0jm"]
+[ext_resource type="Script" uid="uid://mxhy54k0637p" path="res://enemy/gravity.gd" id="2_px1sc"]
 [ext_resource type="Texture2D" uid="uid://6ria773fetjt" path="res://CompleteGraySpriteSheet.png" id="2_vgkeb"]
 [ext_resource type="Script" uid="uid://cvux7jk46v73n" path="res://state_machine/node_finite_state_machine.gd" id="3_am0pq"]
-[ext_resource type="Script" uid="uid://dispbe3grmb4s" path="res://Enemy/state_machine_controller.gd" id="3_m6jha"]
-[ext_resource type="Script" uid="uid://b5df4bdvnfunk" path="res://Enemy/state_hunt.gd" id="4_ncf7h"]
-[ext_resource type="Script" uid="uid://dm8pjufsnyqkh" path="res://Enemy/state_attack.gd" id="5_m6jha"]
-[ext_resource type="Script" uid="uid://cl2pttvkkcx0b" path="res://Enemy/idle.gd" id="8_vgkeb"]
+[ext_resource type="Script" uid="uid://dispbe3grmb4s" path="res://enemy/state_machine_controller.gd" id="3_m6jha"]
+[ext_resource type="Script" uid="uid://b5df4bdvnfunk" path="res://enemy/state_hunt.gd" id="4_ncf7h"]
+[ext_resource type="Script" uid="uid://dm8pjufsnyqkh" path="res://enemy/state_attack.gd" id="5_m6jha"]
+[ext_resource type="Script" uid="uid://cl2pttvkkcx0b" path="res://enemy/state_idle.gd" id="8_vgkeb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_73g7a"]
 atlas = ExtResource("2_vgkeb")
@@ -134,7 +134,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack",
-"speed": 8.0
+"speed": 15.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -264,17 +264,19 @@ jump_force = -3500.0
 ray_front = NodePath("../../RayCast2D")
 marker = NodePath("../../Marker2D")
 
-[node name="Attack" type="Node" parent="StateMachine" node_paths=PackedStringArray("character_body_2d", "sprite_2d", "muzzle")]
+[node name="Attack" type="Node" parent="StateMachine" node_paths=PackedStringArray("character_body_2d", "sprite_2d", "muzzle", "node_finite_state_machine")]
 script = ExtResource("5_m6jha")
 character_body_2d = NodePath("../..")
 sprite_2d = NodePath("../../Sprite2D")
 slow_down_speed = 1400.0
 muzzle = NodePath("../../Marker2D")
+node_finite_state_machine = NodePath("..")
 
-[node name="Idle" type="Node" parent="StateMachine" node_paths=PackedStringArray("character_body_2d", "sprite_2d")]
+[node name="Idle" type="Node" parent="StateMachine" node_paths=PackedStringArray("character_body_2d", "sprite_2d", "node_finite_state_machine")]
 script = ExtResource("8_vgkeb")
 character_body_2d = NodePath("../..")
 sprite_2d = NodePath("../../Sprite2D")
+node_finite_state_machine = NodePath("..")
 
 [node name="AttackCD" type="Timer" parent="."]
 wait_time = 2.0

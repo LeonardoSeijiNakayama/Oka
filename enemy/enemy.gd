@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 var enemy_death_effect = preload("res://enemy/enemy_death.tscn")
 
-@export var lifes : int = 3
+@export var lifes : int = 100
 
 func _on_hurt_box_area_entered(area: Area2D) -> void:
 	lifes -= 1

@@ -216,16 +216,16 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+#func _process(delta: float) -> void:
 	pass
 
 
-func _on_area_entered(area: Area2D) -> void:
+#func _on_area_entered(area: Area2D) -> void:
 	pass # Replace with function body.
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_73g7a"]
-size = Vector2(791, 792)
+size = Vector2(464, 792)
 
 [node name="Enemy" type="CharacterBody2D" groups=["Enemy"]]
 script = ExtResource("1_xp0jm")
@@ -281,7 +281,7 @@ wait_time = 2.0
 
 [node name="AttackArea" type="Area2D" parent="."]
 collision_layer = 4
-collision_mask = 2
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
 position = Vector2(-2000, 0)
@@ -298,7 +298,7 @@ collision_mask = 40
 script = SubResource("GDScript_vgkeb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
-position = Vector2(-2.5, -14)
+position = Vector2(-5, -14)
 shape = SubResource("RectangleShape2D_73g7a")
 debug_color = Color(0, 0.6436131, 0.30249742, 0.41960785)
 

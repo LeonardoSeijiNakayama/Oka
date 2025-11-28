@@ -17,6 +17,7 @@ func setDir(direction: int) -> void:
 		rotate(PI/2)
 	
 func _ready() -> void:
+	HitBox.set_deferred("disabled", true)
 	GRAVITY.y = 1000.0
 
 
@@ -33,14 +34,13 @@ func _physics_process(delta: float) -> void:
 			hit = false
 	
 	move_and_slide()
-	
-	for i in range(get_slide_collision_count()):
-		var collision = get_slide_collision(i)
-		var colliding_body = collision.get_collider()
-		if colliding_body != null:
-			velocity.x = 0
-			velocity.y = 0
-			if not hit:
-				disappearTimer = DISAPPEAR_TIME
-				hit = true
-				HitBox.set_deferred("disabled", true)
+
+
+
+func _on_hit_box_body_entered(_body: Node2D) -> void:
+	velocity.x = 0
+	velocity.y = 0
+	if not hit:
+		disappearTimer = DISAPPEAR_TIME
+		hit = true
+	pass # Replace with function body.

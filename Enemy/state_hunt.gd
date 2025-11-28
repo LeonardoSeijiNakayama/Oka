@@ -9,10 +9,9 @@ extends NodeState
 
 var player: CharacterBody2D
 
-func on_physics_process(delta: float) -> void:
+func on_physics_process(_delta: float) -> void:
 	var diff := player.global_position - character_body_2d.global_position
 	var direction = sign(diff.x)
-
 	sprite_2d.flip_h = !(direction > 0)
 	ray_front.scale.x = direction
 	if direction < 0:
@@ -25,12 +24,15 @@ func on_physics_process(delta: float) -> void:
 
 	var hit := ray_front.get_collider()
 	if hit != null and hit.is_in_group("Obstacle") and character_body_2d.is_on_floor():
+		print("pulo")
 		character_body_2d.velocity.y = jump_force
+
 
 
 func enter() -> void:
 	sprite_2d.play("run")
 	var players := get_tree().get_nodes_in_group("Player")
+	print(players[0])
 	if players.size() > 0:
 		player = players[0] as CharacterBody2D
 

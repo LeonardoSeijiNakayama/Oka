@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Oka"
-run/main_scene="uid://dfg51nk3g05jw"
+run/main_scene="uid://cg3h1g3j5etqn"
 config/features=PackedStringArray("4.5", "Forward Plus")
 
 [display]

@@ -320,7 +320,7 @@ func run_dash_cd_timer(delta:float)->void:
 		dashCDFlag = false
 
 
-func _on_hurt_box_area_entered(area: Area2D) -> void:
+func _on_hurt_box_area_entered(_area: Area2D) -> void:
 	lifes -= 1
 	print('vida = ', lifes)
 	print('lifes = ', lifes)

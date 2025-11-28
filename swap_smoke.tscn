@@ -1,0 +1,93 @@
+[gd_scene load_steps=14 format=3 uid="uid://csr7v4hfc4gu0"]
+
+[ext_resource type="Texture2D" uid="uid://cl5pmmyff343g" path="res://swap_smoke_1.png" id="1_ncg64"]
+[ext_resource type="Script" uid="uid://btvou1v0ybaqu" path="res://swap_smoke.gd" id="2_dxpyy"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dxpyy"]
+atlas = ExtResource("1_ncg64")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_va0jo"]
+atlas = ExtResource("1_ncg64")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jgyqh"]
+atlas = ExtResource("1_ncg64")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_deba2"]
+atlas = ExtResource("1_ncg64")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fq1ma"]
+atlas = ExtResource("1_ncg64")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1jttj"]
+atlas = ExtResource("1_ncg64")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7m8ue"]
+atlas = ExtResource("1_ncg64")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5j46d"]
+atlas = ExtResource("1_ncg64")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1pdpi"]
+atlas = ExtResource("1_ncg64")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_17lny"]
+atlas = ExtResource("1_ncg64")
+region = Rect2(96, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0lqvo"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dxpyy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_va0jo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jgyqh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_deba2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fq1ma")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1jttj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7m8ue")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5j46d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1pdpi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_17lny")
+}],
+"loop": false,
+"name": &"default",
+"speed": 25.0
+}]
+
+[node name="Swap_Scythe" type="AnimatedSprite2D"]
+z_index = 3
+texture_filter = 1
+scale = Vector2(38, 38)
+sprite_frames = SubResource("SpriteFrames_0lqvo")
+autoplay = "default"
+frame_progress = 1.0
+script = ExtResource("2_dxpyy")
+
+[connection signal="animation_finished" from="." to="." method="_on_animation_finished"]

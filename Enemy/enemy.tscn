@@ -1,13 +1,13 @@
 [gd_scene load_steps=38 format=3 uid="uid://c4te4mr2noc80"]
 
-[ext_resource type="Script" uid="uid://6ekbe8amij3x" path="res://enemy/enemy.gd" id="1_xp0jm"]
-[ext_resource type="Script" uid="uid://mxhy54k0637p" path="res://enemy/gravity.gd" id="2_px1sc"]
+[ext_resource type="Script" uid="uid://6ekbe8amij3x" path="res://Enemy/enemy.gd" id="1_xp0jm"]
+[ext_resource type="Script" uid="uid://mxhy54k0637p" path="res://Enemy/gravity.gd" id="2_px1sc"]
 [ext_resource type="Texture2D" uid="uid://6ria773fetjt" path="res://CompleteGraySpriteSheet.png" id="2_vgkeb"]
 [ext_resource type="Script" uid="uid://cvux7jk46v73n" path="res://state_machine/node_finite_state_machine.gd" id="3_am0pq"]
-[ext_resource type="Script" uid="uid://dispbe3grmb4s" path="res://enemy/state_machine_controller.gd" id="3_m6jha"]
-[ext_resource type="Script" uid="uid://b5df4bdvnfunk" path="res://enemy/state_hunt.gd" id="4_ncf7h"]
-[ext_resource type="Script" uid="uid://dm8pjufsnyqkh" path="res://enemy/state_attack.gd" id="5_m6jha"]
-[ext_resource type="Script" uid="uid://cl2pttvkkcx0b" path="res://enemy/idle.gd" id="8_vgkeb"]
+[ext_resource type="Script" uid="uid://dispbe3grmb4s" path="res://Enemy/state_machine_controller.gd" id="3_m6jha"]
+[ext_resource type="Script" uid="uid://b5df4bdvnfunk" path="res://Enemy/state_hunt.gd" id="4_ncf7h"]
+[ext_resource type="Script" uid="uid://dm8pjufsnyqkh" path="res://Enemy/state_attack.gd" id="5_m6jha"]
+[ext_resource type="Script" uid="uid://cl2pttvkkcx0b" path="res://Enemy/idle.gd" id="8_vgkeb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_73g7a"]
 atlas = ExtResource("2_vgkeb")
@@ -294,7 +294,7 @@ target_position = Vector2(282, -1)
 
 [node name="HurtBox" type="Area2D" parent="."]
 collision_layer = 4
-collision_mask = 8
+collision_mask = 40
 script = SubResource("GDScript_vgkeb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]

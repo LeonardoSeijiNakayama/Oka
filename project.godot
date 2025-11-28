@@ -73,6 +73,7 @@ swap={
 2d_physics/layer_3="ENEMY"
 2d_physics/layer_4="PLAYER_SHOT"
 2d_physics/layer_5="ENEMY_SHOT"
+2d_physics/layer_6="PLAYER_HIT"
 
 [rendering]
 

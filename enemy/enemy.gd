@@ -6,7 +6,8 @@ var enemy_death_effect = preload("res://enemy/enemy_death.tscn")
 
 func _on_hurt_box_area_entered(area: Area2D) -> void:
 	lifes -= 1
-	area.get_parent().queue_free()
+	if not area.get_parent().is_in_group("Player"):
+		area.get_parent().queue_free()
 	print('lifes = ', lifes)
 	if(lifes <= 0):
 		var enemy_death = enemy_death_effect.instantiate() as Node2D

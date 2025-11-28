@@ -10,7 +10,7 @@ extends CharacterBody2D
 
 var muzzle_position = 0
 const SPEED = 1000.0
-const FIRST_JUMP_VELOCITY = -3000.0
+const FIRST_JUMP_VELOCITY = -3500.0
 const SECOND_JUMP_VELOCITY = -2600.0
 var GRAVITY = Vector2.ZERO
 var REDUCED_GRAVITY = Vector2.ZERO
@@ -29,7 +29,7 @@ var DASH_DURATION = 0.15
 var DASH_COOLDOWN = 0.25
 @export_range(0.0,0.15)var dashCDTimer: float = 0.0
 var dashCDFlag = false
-var DASH_SPEED = 3500.0
+var DASH_SPEED = 4500.0
 @export_range(-1, 1)var dash_dir:int = 1
 var dashtimerflag = false
 var can_dash = true
@@ -84,7 +84,12 @@ func _process(delta: float) -> void:
 			jumpFlag = false
 		'swap':
 			pass
-			
+		'falling':
+			if character == CHARACTER1:
+				Sprite.play('falling_1')
+			else:
+				Sprite.play('falling_2')
+	
 	
 	if Input.is_action_just_pressed("swap"):
 		swap_character()
@@ -123,6 +128,8 @@ func _physics_process(delta: float) -> void:
 	
 	# FÍSICA DO JUMP
 	if not is_on_floor():
+		if velocity.y>0:
+			state = 'falling'
 		## play pulo
 		if Input.is_action_pressed("up") and velocity.y<0:
 			velocity += REDUCED_GRAVITY * delta
@@ -245,7 +252,7 @@ func shootDown()->void:
 	attackTimer = ATTACK_TIME
 	var Arrow = ArrowScene.instantiate()
 	get_parent().add_child(Arrow, false, Node.INTERNAL_MODE_DISABLED)
-	Arrow.global_position.y = global_position.y + 512
+	Arrow.global_position.y = global_position.y + 630
 	Arrow.global_position.x = global_position.x
 	attackCDTimer = SHOT_COOLDOWN
 	attackCDFlag = true

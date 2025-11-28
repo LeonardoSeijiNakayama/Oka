@@ -293,7 +293,7 @@ debug_color = Color(0.85173225, 0.00079723774, 0.8884973, 0.41960785)
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 position = Vector2(0, 139)
-target_position = Vector2(507, 52)
+target_position = Vector2(282, -1)
 
 [node name="HurtBox" type="Area2D" parent="."]
 collision_layer = 4

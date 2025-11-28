@@ -11,19 +11,21 @@ var player: CharacterBody2D
 
 func on_physics_process(_delta: float) -> void:
 	var diff := player.global_position - character_body_2d.global_position
-	var direction = sign(diff.x)
-	
-	sprite_2d.flip_h = !(direction > 0)
-	ray_front.scale.x = direction
-	
-	if direction < 0:
-		if marker.position.x > 0:
-			marker.position.x = -marker.position.x;
-	elif direction > 0:
-		if marker.position.x < 0:
-			marker.position.x = -marker.position.x;
+	print(diff.x)
+	if abs(diff.x) <= 8000.00:
+		var direction = sign(diff.x)
+		
+		sprite_2d.flip_h = !(direction > 0)
+		ray_front.scale.x = direction
+		
+		if direction < 0:
+			if marker.position.x > 0:
+				marker.position.x = -marker.position.x;
+		elif direction > 0:
+			if marker.position.x < 0:
+				marker.position.x = -marker.position.x;
 
-	character_body_2d.velocity.x = direction * speed
+		character_body_2d.velocity.x = direction * speed
 
 
 	var hit := ray_front.get_collider()

@@ -5,11 +5,18 @@ extends CharacterBody2D
 @onready var DashTimer = $DashTimer
 @onready var World: Node2D = get_parent()
 @onready var ArrowScene = preload("res://Arrow.tscn")
+@onready var SmokeScene = preload("res://swap_smoke.tscn")
+@onready var AudioWalking: AudioStreamPlayer2D = $Audios/Walking
+@onready var AudioDash: AudioStreamPlayer2D = $Audios/Dash
+@onready var AudioArrow: AudioStreamPlayer2D = $Audios/ArrowSwoosh
+@onready var AudioJump: AudioStreamPlayer2D = $Audios/Jump
+@onready var AudioHit: AudioStreamPlayer2D = $Audios/Hit
+@onready var AudioSwap: AudioStreamPlayer2D = $Audios/Swap
 
-@export var lifes : int = 1000
+@export var lifes : int = 5
 
 var muzzle_position = 0
-const SPEED = 1000.0
+const SPEED = 1300.0
 const FIRST_JUMP_VELOCITY = -3500.0
 const SECOND_JUMP_VELOCITY = -2600.0
 var GRAVITY = Vector2.ZERO
@@ -67,11 +74,15 @@ func _process(delta: float) -> void:
 			else:
 				Sprite.play('idle_2')
 		'attack':
+			if not AudioArrow.playing:
+				AudioArrow.play()
 			if character == CHARACTER1:
 				Sprite.play('attack_1')
 			else:
 				Sprite.play('attack_2')
 		'run':
+			if not AudioWalking.playing:
+				AudioWalking.play()
 			if character == CHARACTER1:
 				Sprite.play('run_1')
 			else:
@@ -104,9 +115,7 @@ func _process(delta: float) -> void:
 					shoot()
 			CHARACTER2:
 				attack()
-		
-		
-		
+	
 	if attacking:
 		run_attack_timer(delta)
 	
@@ -161,6 +170,8 @@ func _physics_process(delta: float) -> void:
 	
 	# LOGICA E ESTADO DE JUMP
 	if Input.is_action_just_pressed("up") and jumpCount<2:
+		if not AudioJump.playing:
+				AudioJump.play()
 		state = 'jump'
 		if not attackFlag:
 			jumpFlag = true
@@ -175,13 +186,13 @@ func _physics_process(delta: float) -> void:
 		jumpCount+=1
 
 	
-	if dashtimerflag == true and DashTimer.time_left == 0.0:
-		dashtimerflag = false
-	elif dashtimerflag == true:
-		## play dash
-		if (Input.is_action_just_pressed("right") or Input.is_action_just_pressed("left")) and not dashing and can_dash and character == CHARACTER2 and !dashCDFlag:
-			if direction == prev_direction:
-				enable_dash()
+	#if dashtimerflag == true and DashTimer.time_left == 0.0:
+		#dashtimerflag = false
+	#elif dashtimerflag == true:
+		### play dash
+		#if (Input.is_action_just_pressed("right") or Input.is_action_just_pressed("left")) and not dashing and can_dash and character == CHARACTER2 and !dashCDFlag:
+			#if direction == prev_direction:
+				#enable_dash()
 	
 	
 	if direction:
@@ -191,8 +202,8 @@ func _physics_process(delta: float) -> void:
 			dashtimerflag = true
 	
 	
-	#if Input.is_action_just_pressed("dash") and not dashing and can_dash and character == CHARACTER2 and !dashCDFlag:
-		#enable_dash()
+	if Input.is_action_just_pressed("dash") and not dashing and can_dash and character == CHARACTER2 and !dashCDFlag:
+		enable_dash()
 	
 	if dashing:
 		run_dash_timer(delta)
@@ -285,7 +296,12 @@ func run_attack_cd_timer(delta:float)->void:
 
 func swap_character()->void:
 	## play swap
+	if not AudioSwap.playing:
+		AudioSwap.play()
 	state = 'swap'
+	var smoke = SmokeScene.instantiate() as Node2D
+	smoke.global_position = global_position
+	get_parent().add_child(smoke)
 	if character == CHARACTER1:
 		character = CHARACTER2
 	else:
@@ -294,6 +310,8 @@ func swap_character()->void:
 
 
 func enable_dash()->void:
+	if not AudioDash.playing:
+		AudioDash.play()
 	dashing = true
 	dashDurationTimer = DASH_DURATION
 	dashCDTimer = DASH_COOLDOWN
@@ -322,11 +340,10 @@ func run_dash_cd_timer(delta:float)->void:
 
 func _on_hurt_box_area_entered(_area: Area2D) -> void:
 	lifes -= 1
+	if not AudioHit.playing:
+		AudioHit.play()
 	print('lifes = ', lifes)
 	_area.get_parent().queue_free()
 	if(lifes <= 0):
-		#var enemy_death = enemy_death_effect.instantiate() as Node2D
-		#enemy_death.global_position = global_positiond
-		#get_parent().add_child(enemy_death)
 		print('morreu')
 		queue_free()

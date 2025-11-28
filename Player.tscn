@@ -1,8 +1,14 @@
-[gd_scene load_steps=41 format=3 uid="uid://ccuoxfb8fix7q"]
+[gd_scene load_steps=47 format=3 uid="uid://ccuoxfb8fix7q"]
 
 [ext_resource type="Script" uid="uid://gj4q8r6rfj05" path="res://player.gd" id="1_kpjcp"]
 [ext_resource type="Texture2D" uid="uid://dos3sg2auxfla" path="res://SpriteSheetCompleto (2).png" id="2_kne1u"]
 [ext_resource type="Texture2D" uid="uid://d3fgs7dnale0m" path="res://SpriteSheetCompleto (3).png" id="3_e80uo"]
+[ext_resource type="AudioStream" uid="uid://xm3hw2sowm4i" path="res://sounds/walking-on-grass-363353.mp3" id="4_e80uo"]
+[ext_resource type="AudioStream" uid="uid://tbn1c35vfa4" path="res://sounds/dash.mp3" id="5_cxr5p"]
+[ext_resource type="AudioStream" uid="uid://naxtfao16dh" path="res://sounds/JumpGrunt.mp3" id="5_dtqjt"]
+[ext_resource type="AudioStream" uid="uid://dy8ngi4h14ido" path="res://sounds/arrow-swish_03-306040.mp3" id="6_tdg3f"]
+[ext_resource type="AudioStream" uid="uid://cpcumeoudmdot" path="res://sounds/HitGrunt.mp3" id="8_5ncpa"]
+[ext_resource type="AudioStream" uid="uid://b22iukjc7sur3" path="res://sounds/Swap.mp3" id="9_wi0c6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_e80uo"]
 atlas = ExtResource("2_kne1u")
@@ -336,5 +342,32 @@ collision_mask = 16
 position = Vector2(0, -21.5)
 shape = SubResource("RectangleShape2D_e80uo")
 debug_color = Color(0.92482394, 4.4665336e-05, 0.68049055, 0.41960785)
+
+[node name="Audios" type="Node2D" parent="."]
+
+[node name="Walking" type="AudioStreamPlayer2D" parent="Audios"]
+stream = ExtResource("4_e80uo")
+volume_db = -10.0
+pitch_scale = 1.5
+
+[node name="Jump" type="AudioStreamPlayer2D" parent="Audios"]
+stream = ExtResource("5_dtqjt")
+
+[node name="Dash" type="AudioStreamPlayer2D" parent="Audios"]
+stream = ExtResource("5_cxr5p")
+
+[node name="ArrowSwoosh" type="AudioStreamPlayer2D" parent="Audios"]
+stream = ExtResource("6_tdg3f")
+volume_db = -10.0
+pitch_scale = 1.25
+
+[node name="Hit" type="AudioStreamPlayer2D" parent="Audios"]
+stream = ExtResource("8_5ncpa")
+volume_db = -10.0
+
+[node name="Swap" type="AudioStreamPlayer2D" parent="Audios"]
+stream = ExtResource("9_wi0c6")
+volume_db = -7.0
+pitch_scale = 1.25
 
 [connection signal="area_entered" from="HurtBox" to="." method="_on_hurt_box_area_entered"]

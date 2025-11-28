@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cfr4ooljitkx1"]
 
-[ext_resource type="FontFile" uid="uid://ncnqhe07cy20" path="res://ui/Chalk-Regular.ttf" id="1_riuru"]
-[ext_resource type="Script" uid="uid://brgti07atprg4" path="res://ui/story.gd" id="1_y1asn"]
+[ext_resource type="Script" uid="uid://brgti07atprg4" path="res://ui/begin_story.gd" id="1_6aux6"]
+[ext_resource type="FontFile" uid="uid://ncnqhe07cy20" path="res://ui/Chalk-Regular.ttf" id="2_hjhb6"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -35,12 +35,14 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_y1asn")
+script = ExtResource("1_6aux6")
 
 [node name="StoryLabel" type="Label" parent="CenterContainer"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("1_riuru")
+theme_override_fonts/font = ExtResource("2_hjhb6")
 theme_override_font_sizes/font_size = 64
 text = "Sexo"
+horizontal_alignment = 1
+vertical_alignment = 1
 visible_characters = 0
 visible_ratio = 0.0

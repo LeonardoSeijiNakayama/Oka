@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cg3h1g3j5etqn"]
+[gd_scene load_steps=6 format=3 uid="uid://cg3h1g3j5etqn"]
 
 [ext_resource type="Texture2D" uid="uid://bxsery0v4y5as" path="res://ui/MenuBackground.jpeg" id="1_eya86"]
 [ext_resource type="Script" uid="uid://bmtce1fg0jlxg" path="res://ui/menu.gd" id="2_flbq7"]
 [ext_resource type="FontFile" uid="uid://ncnqhe07cy20" path="res://ui/Chalk-Regular.ttf" id="3_pttcu"]
+[ext_resource type="AudioStream" uid="uid://c2ar4xojin0uq" path="res://sounds/MenuMusic.mp3" id="4_nsqqj"]
 
 [sub_resource type="GDScript" id="GDScript_pttcu"]
 
@@ -66,3 +67,8 @@ theme_override_font_sizes/font_size = 128
 text = "Exit
 "
 icon_alignment = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_nsqqj")
+volume_db = -10.0
+autoplay = true

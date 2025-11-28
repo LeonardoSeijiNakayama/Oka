@@ -1,10 +1,13 @@
 extends CharacterBody2D
 
 var enemy_death_effect = preload("res://enemy/enemy_death.tscn")
+@onready var AudioHit: AudioStreamPlayer2D = $Audios/Hit
 
-@export var lifes : int = 100
+@export var lifes : int = 3
 
 func _on_hurt_box_area_entered(area: Area2D) -> void:
+	if not AudioHit.playing:
+		AudioHit.play()
 	lifes -= 1
 	if not area.get_parent().is_in_group("Player"):
 		area.get_parent().queue_free()

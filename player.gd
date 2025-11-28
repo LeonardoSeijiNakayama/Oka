@@ -6,9 +6,12 @@ extends CharacterBody2D
 @onready var World: Node2D = get_parent()
 @onready var ArrowScene = preload("res://Arrow.tscn")
 
-const SPEED = 450.0
-const FIRST_JUMP_VELOCITY = -700.0
-const SECOND_JUMP_VELOCITY = -600.0
+@export var lifes : int = 1000
+
+var muzzle_position = 0
+const SPEED = 1000.0
+const FIRST_JUMP_VELOCITY = -3000.0
+const SECOND_JUMP_VELOCITY = -2600.0
 var GRAVITY = Vector2.ZERO
 var REDUCED_GRAVITY = Vector2.ZERO
 var attacking = false
@@ -26,13 +29,18 @@ var DASH_DURATION = 0.15
 var DASH_COOLDOWN = 0.25
 @export_range(0.0,0.15)var dashCDTimer: float = 0.0
 var dashCDFlag = false
-var DASH_SPEED = 1400.0
+var DASH_SPEED = 3500.0
 @export_range(-1, 1)var dash_dir:int = 1
 var dashtimerflag = false
 var can_dash = true
 var dashing = false
 var facing := 1 # 1 = direita, -1 = esquerdad
 var prev_direction
+var state : String = 'idle'
+var attackTimer = 0.0
+var attackFlag = false
+const ATTACK_TIME = 0.5
+var jumpFlag = false
 
 @export_range(-1, 1)var character: int = 1
 
@@ -40,20 +48,49 @@ var prev_direction
 
 func _ready() -> void:
 	GRAVITY.x = 0.0
-	GRAVITY.y = 2000.0
+	GRAVITY.y = 8000.0
 	REDUCED_GRAVITY.x = 0.0
-	REDUCED_GRAVITY.y = 1000.0
+	REDUCED_GRAVITY.y = 6000.0
 	AttackArea.body_entered.connect(attack_area_detection)
 	AttackArea.visible = false
+	AttackArea.monitoring = false
+	AttackArea.monitorable = false
 	character = 1
 
 
 func _process(delta: float) -> void:
 	
+	match state:
+		'idle':
+			if character == CHARACTER1:
+				Sprite.play('idle_1')
+			else:
+				Sprite.play('idle_2')
+		'attack':
+			if character == CHARACTER1:
+				Sprite.play('attack_1')
+			else:
+				Sprite.play('attack_2')
+		'run':
+			if character == CHARACTER1:
+				Sprite.play('run_1')
+			else:
+				Sprite.play('run_2')
+		'jump':
+			if character == CHARACTER1 and jumpFlag:
+				Sprite.play('jump_1')
+			elif jumpFlag:
+				Sprite.play('jump_2')
+			jumpFlag = false
+		'swap':
+			pass
+			
+	
 	if Input.is_action_just_pressed("swap"):
 		swap_character()
 	
 	if Input.is_action_just_pressed("attack") and !attacking and !attackCDFlag:
+		state = 'attack'
 		match character:
 			CHARACTER1:
 				if not is_on_floor() and Input.is_action_pressed("down"):
@@ -74,19 +111,54 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	
+	#aaaaaprint(state)
+	# Timer da animação de attack
+	if attackFlag and attackTimer >=0.0:
+		attackTimer -= delta
+	
+	if attackTimer <=0.0:
+		attackFlag = false
+		
+	
+	# FÍSICA DO JUMP
 	if not is_on_floor():
-		if jumpCount == 0:
-			jumpCount = 1
+		## play pulo
 		if Input.is_action_pressed("up") and velocity.y<0:
 			velocity += REDUCED_GRAVITY * delta
 		else:
 			velocity += GRAVITY * delta
 	
+	
+	# VERIFICA ESTADO DE IDLE E APLICA O ESTADO DE ESTAR NO CHÃO
 	if is_on_floor():
+		jumpFlag = false
+		if not attackFlag:
+			state = 'idle'
 		jumpCount = 0
 		can_dash = true
 	
+	
+	# VERIFICA ESTADO DE RUN E APLICA VELOCIDADE
+	var direction := Input.get_axis("left", "right")
+	if direction:
+		dash_dir = direction
+		if not dashing and not attackFlag:
+			velocity.x = direction * SPEED
+			if is_on_floor():
+				state = 'run'
+	else:
+		if not dashing:
+			velocity.x = move_toward(velocity.x, 0, SPEED)
+	
+	
+	# LOGICA E ESTADO DE JUMP
 	if Input.is_action_just_pressed("up") and jumpCount<2:
+		state = 'jump'
+		if not attackFlag:
+			jumpFlag = true
+			
+		print('jump count = ', jumpCount)
 		match jumpCount:
 			0:
 				velocity.y = FIRST_JUMP_VELOCITY
@@ -94,20 +166,12 @@ func _physics_process(delta: float) -> void:
 				if character == CHARACTER1:
 					velocity.y = SECOND_JUMP_VELOCITY
 		jumpCount+=1
-	
-	var direction := Input.get_axis("left", "right")
-	
-	if direction:
-		dash_dir = direction
-		if not dashing:
-			velocity.x = direction * SPEED
-	else:
-		if not dashing:
-			velocity.x = move_toward(velocity.x, 0, SPEED)
+
 	
 	if dashtimerflag == true and DashTimer.time_left == 0.0:
 		dashtimerflag = false
 	elif dashtimerflag == true:
+		## play dash
 		if (Input.is_action_just_pressed("right") or Input.is_action_just_pressed("left")) and not dashing and can_dash and character == CHARACTER2 and !dashCDFlag:
 			if direction == prev_direction:
 				enable_dash()
@@ -150,28 +214,38 @@ func attack_area_detection(area:Area2D) -> void:
 		print("hit")
 
 
-
 func attack()->void:
+	state = 'attack'
+	attackFlag = true
+	attackTimer = ATTACK_TIME
 	AttackArea.monitoring = true
+	AttackArea.monitorable = true
 	AttackArea.visible = true
 	attacking = true
 	attackDurationTimer = ATTACK_DURATION
 	print("iniciou ataque")
 
 func shoot()->void:
-	var Arrow = ArrowScene.instantiate()
+	state = 'attack'
+	attackFlag = true
+	attackTimer = ATTACK_TIME
+	var Arrow = ArrowScene.instantiate() as Node2D
 	get_parent().add_child(Arrow, false, Node.INTERNAL_MODE_DISABLED)
 	Arrow.global_position.y = global_position.y
-	Arrow.global_position.x = global_position.x + (96*facing)
+	Arrow.global_position.x = global_position.x + (512*facing)
 	attackCDTimer = SHOT_COOLDOWN
 	attackCDFlag = true
+	print('Facing: ', facing)
 	Arrow.setDir(facing)
 
 
 func shootDown()->void:
+	state = 'attack'
+	attackFlag = true
+	attackTimer = ATTACK_TIME
 	var Arrow = ArrowScene.instantiate()
 	get_parent().add_child(Arrow, false, Node.INTERNAL_MODE_DISABLED)
-	Arrow.global_position.y = global_position.y + 128
+	Arrow.global_position.y = global_position.y + 512
 	Arrow.global_position.x = global_position.x
 	attackCDTimer = SHOT_COOLDOWN
 	attackCDFlag = true
@@ -184,6 +258,7 @@ func run_attack_timer(delta:float)->void:
 	if attackDurationTimer <= 0.0:
 		attacking = false
 		AttackArea.monitoring = false
+		AttackArea.monitorable = false
 		AttackArea.visible = false
 		attackDurationTimer = 0.0
 		attackCDTimer = ATTACK_COOLDOWN
@@ -202,12 +277,12 @@ func run_attack_cd_timer(delta:float)->void:
 
 
 func swap_character()->void:
+	## play swap
+	state = 'swap'
 	if character == CHARACTER1:
 		character = CHARACTER2
-		Sprite.texture = load("res://hitbox_player.png")
 	else:
 		character = CHARACTER1
-		Sprite.texture = load("res://hitbox_player2.png")
 
 
 
@@ -232,7 +307,19 @@ func run_dash_timer(delta:float)->void:
 
 
 func run_dash_cd_timer(delta:float)->void:
-	dashCDTimer-=delta
+	dashCDTimer -= delta
 	if dashCDTimer<=0.0:
 		dashCDTimer = 0.0
 		dashCDFlag = false
+
+
+func _on_hurt_box_area_entered(area: Area2D) -> void:
+	lifes -= 1
+	print('vida = ', lifes)
+	print('lifes = ', lifes)
+	if(lifes <= 0):
+		#var enemy_death = enemy_death_effect.instantiate() as Node2D
+		#enemy_death.global_position = global_positiond
+		#get_parent().add_child(enemy_death)
+		print('morreu')
+		queue_free()

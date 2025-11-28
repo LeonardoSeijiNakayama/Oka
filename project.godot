@@ -13,7 +13,12 @@ config_version=5
 config/name="Oka"
 run/main_scene="uid://dfg51nk3g05jw"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/resizable=false
 
 [input]
 
@@ -58,6 +63,19 @@ swap={
 ]
 }
 
+[layer_names]
+
+2d_render/layer_1="GROUND"
+2d_render/layer_2="PLAYER"
+2d_render/layer_3="ENEMY"
+2d_physics/layer_1="GROUND"
+2d_physics/layer_2="PLAYER"
+2d_physics/layer_3="ENEMY"
+2d_physics/layer_4="PLAYER_SHOT"
+2d_physics/layer_5="ENEMY_SHOT"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+anti_aliasing/quality/msaa_2d=3
+anti_aliasing/quality/screen_space_aa=2

@@ -7,10 +7,11 @@
 size = Vector2(96, 10)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_08ca5"]
-size = Vector2(8, 8)
+size = Vector2(7, 8)
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="Arrow" type="CharacterBody2D"]
 z_index = 1
+scale = Vector2(4, 4)
 script = ExtResource("1_a8t2u")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -19,8 +20,10 @@ shape = SubResource("RectangleShape2D_a8t2u")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_265pn")
 
-[node name="AreaTip" type="Area2D" parent="."]
+[node name="HitBox" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaTip"]
-position = Vector2(44, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+position = Vector2(45, 0)
 shape = SubResource("RectangleShape2D_08ca5")

@@ -1,0 +1,87 @@
+[gd_scene load_steps=12 format=3 uid="uid://dqcuhnvwh0yol"]
+
+[ext_resource type="Texture2D" uid="uid://dqu6ab80q1xxy" path="res://explosion.png" id="1_5hhlx"]
+[ext_resource type="Script" uid="uid://c5e1n4xuay6od" path="res://enemy_death.gd" id="2_j34p0"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0qg6v"]
+atlas = ExtResource("1_5hhlx")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ieej1"]
+atlas = ExtResource("1_5hhlx")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cf2c4"]
+atlas = ExtResource("1_5hhlx")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tpqdq"]
+atlas = ExtResource("1_5hhlx")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3kyqs"]
+atlas = ExtResource("1_5hhlx")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jbee1"]
+atlas = ExtResource("1_5hhlx")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sp6x0"]
+atlas = ExtResource("1_5hhlx")
+region = Rect2(288, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p1ley"]
+atlas = ExtResource("1_5hhlx")
+region = Rect2(336, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_igqa7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0qg6v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ieej1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cf2c4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tpqdq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3kyqs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jbee1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sp6x0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p1ley")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"explosao",
+"speed": 12.0
+}]
+
+[node name="EnemyDeath" type="AnimatedSprite2D"]
+z_index = 1
+texture_filter = 1
+scale = Vector2(30, 30)
+sprite_frames = SubResource("SpriteFrames_igqa7")
+animation = &"explosao"
+autoplay = "explosao"
+frame = 8
+frame_progress = 1.0
+script = ExtResource("2_j34p0")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.4
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

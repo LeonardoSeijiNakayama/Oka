@@ -158,6 +158,7 @@ func _physics_process(delta: float) -> void:
 	# VERIFICA ESTADO DE RUN E APLICA VELOCIDADE
 	var direction := Input.get_axis("left", "right")
 	if direction:
+		@warning_ignore("narrowing_conversion")
 		dash_dir = direction
 		if not dashing and not attackFlag:
 			velocity.x = direction * SPEED
@@ -214,6 +215,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	
 	if direction != 0:
+		@warning_ignore("narrowing_conversion")
 		set_facing(direction)
 
 
